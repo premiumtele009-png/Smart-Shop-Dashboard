@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "Customer": {
+      "title": "Customer",
+      "description": "A customer who can receive top-ups.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "currentBalance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "currentBalance"]
+    },
+    "SaleRecord": {
+      "title": "Sale Record",
+      "description": "A record of one or more sales activities performed by an agent for a customer.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "agentName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "linkedTopupId": { "type": "string" },
+        "items": { 
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "activityType": { "type": "string" },
+              "value": { "type": "number" },
+              "points": { "type": "number" }
+            }
+          }
+        },
+        "totalAmount": { "type": "number" },
+        "totalPoints": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "success", "failed"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["agentName", "customerPhone", "items", "totalAmount", "totalPoints", "status", "timestamp"]
+    },
+    "TopUpRecord": {
+      "title": "Top-Up Record",
+      "description": "A record of a top-up transaction with renewal details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "agentName": { "type": "string" },
+        "customerName": { "type": "string" },
+        "topUpNumber": { "type": "string" },
+        "contact": { "type": "string" },
+        "tariff": { "type": "string" },
+        "amount": { "type": "number" },
+        "points": { "type": "number" },
+        "renewDate": { "type": "string", "format": "date-time" },
+        "period": { "type": "number" },
+        "expiryDate": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["pending", "success", "failed"] },
+        "paymentMethod": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["agentName", "customerName", "topUpNumber", "tariff", "amount", "renewDate", "period", "expiryDate", "status", "timestamp", "customerId", "points"]
+    }
+  },
+  "firestore": {
+    "/customers/{customerId}": {
+      "schema": "Customer",
+      "description": "Collection of customers."
+    },
+    "/sales/{saleId}": {
+      "schema": "SaleRecord",
+      "description": "Global collection of all sale records."
+    },
+    "/topups/{topupId}": {
+      "schema": "TopUpRecord",
+      "description": "Log of top-up and renewal transactions."
+    }
+  }
+}
